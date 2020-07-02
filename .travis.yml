@@ -8,14 +8,14 @@ before_install:
 
 script:
   - docker run -e CI=true guillsav/multi-docker npm test
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 after_success:
   - docker build -t guillsav/multi-client ./client
   - docker build -t guillsav/multi-nginx ./nginx
   - docker build -t guillsav/multi-server ./server
   - docker build -t guillsav/multi-worker ./worker
-  # Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # Take those images and push them to docker hub
   - docker push guillsav/multi-client
   - docker push guillsav/multi-nginx
